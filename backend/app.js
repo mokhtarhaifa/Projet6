@@ -6,6 +6,10 @@ const app = express();
 const mongoose = require('mongoose');
 
 const userRoutes = require('./routes/user');
+const saucesRoutes = require('./routes/sauces');
+
+const path = require('path');
+
 const cors= require('cors')
 
 //connection de l'api 
@@ -24,16 +28,18 @@ app.use((req, res, next) => {
   res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, PATCH, OPTIONS');
   next();
 });
-app.use('/api/sauces', (req, res, next) => {
-  Thing.find()
-    .then(things => res.status(200).json(things))
-    .catch(error => res.status(400).json({ error }));
-    next();
-});
 
 app.use(express.json());
 app.use(cors());
 //configuration de route user
 app.use('/api/auth', userRoutes);
+
+
+app.use('/images', express.static(path.join(__dirname, 'images')));
+
+//configuration de route sauces
+app.use('/api/sauces', saucesRoutes);
+app.use('/api/sauces', saucesRoutes);
+
 
 module.exports = app;
