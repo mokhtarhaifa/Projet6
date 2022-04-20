@@ -1,3 +1,7 @@
+// configuration des variables d'environement
+const dotenv = require("dotenv");
+dotenv.config()
+
 // application express
 const express = require('express');
 
@@ -12,14 +16,14 @@ const path = require('path');
 
 const cors= require('cors')
 
+const helmet = require("helmet");
+
 //connection de l'api 
-mongoose.connect('mongodb+srv://haifaD:Supercode52@clusterproject.2pmx9.mongodb.net/Database?retryWrites=true&w=majority',
+mongoose.connect(`mongodb+srv://${process.env.MONGODB_USER}:${process.env.MONGODB_PASSWORD}@${process.env.MONGODB_CLUSTER_NAME}.mongodb.net/${process.env.MONGODB_DATABASE_NAME}?retryWrites=true&w=majority`,
   { useNewUrlParser: true,
     useUnifiedTopology: true })
   .then(() => console.log('Connexion à MongoDB réussie !'))
   .catch(() => console.log('Connexion à MongoDB échouée !'));
-
-    //middelware contenue json
 
 //middelware de configuration de cors
 app.use((req, res, next) => {
@@ -31,10 +35,11 @@ app.use((req, res, next) => {
 
 app.use(express.json());
 app.use(cors());
+// sécuriser les en-têtes HTPP
+app.use(helmet());
+
 //configuration de route user
 app.use('/api/auth', userRoutes);
-
-
 app.use('/images', express.static(path.join(__dirname, 'images')));
 
 //configuration de route sauces
